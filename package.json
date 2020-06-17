@@ -1,0 +1,20 @@
+{
+  "name": "testing-javascript-fundamentals",
+  "version": "1.0.0",
+  "description": "Companion repository to Vue School's Testing JavaScript Fundamentals workshop by Rolf Haug",
+  "main": "index.js",
+  "repository": "git@github.com:rahaug/testing-javascript-fundamentals.git",
+  "author": "Rolf Haug <rolf@rah.no>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "babel-jest": "^26.0.1",
+    "faker": "^4.1.0",
+    "jest": "^26.0.1",
+    "prettier": "2.0.5"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}

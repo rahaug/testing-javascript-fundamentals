@@ -51,3 +51,53 @@ it('matches snapshot', () => {
   const cart = createCart()
   expect(cart).toMatchSnapshot()
 })
+
+describe('checkout', () => {
+  it('successfully submits order', async () => {
+    api.isAuthenticated = jest.fn().mockResolvedValue(true)
+    const item = createItem({ stock: 10 })
+    cart.add(item)
+    api.submitOrder = jest.fn().mockResolvedValue('/order-confirmation')
+
+    const url = await cart.checkout({})
+    expect(url).toBe('/order-confirmation')
+  })
+
+  it('throws if user is not authenticated - 1', async () => {
+    api.isAuthenticated = jest.fn().mockRejectedValue(false)
+
+    // This way can produce false positives, because the test will pass if cart.checkout does not throw an exception
+    // To solve this, we use use expect.assertions to ensure that X assertions are executed
+    // We could also use the fail() helper function from Jest, in the try block
+    expect.assertions(2)
+    try {
+      await cart.checkout({})
+      //fail('Checkout did not throw as expected')
+    } catch (error) {
+      expect(error.message).toContain('Unauthorized')
+    }
+    expect(api.isAuthenticated).toHaveBeenCalled()
+  })
+
+  it('throws if user is not authenticated - 2', async () => {
+    api.isAuthenticated = jest.fn().mockRejectedValue(false)
+
+    // Another way that catches and expect on the error directly
+    await cart
+      .checkout({})
+      .catch((e) => expect(e).toEqual(Error('Unauthorized. Please log in')))
+
+    expect(api.isAuthenticated).toHaveBeenCalled()
+  })
+
+  it('throws if user is not authenticated - 3 (recommended)', async () => {
+    api.isAuthenticated = jest.fn().mockRejectedValue(false)
+    await expect(cart.checkout({})).rejects.toThrowError('Unauthorized')
+    expect(api.isAuthenticated).toHaveBeenCalled()
+  })
+
+  it('throws if cart is empty', async () => {
+    api.isAuthenticated = jest.fn().mockResolvedValue(true)
+    await expect(cart.checkout({})).rejects.toThrow('Cart is empty')
+  })
+})

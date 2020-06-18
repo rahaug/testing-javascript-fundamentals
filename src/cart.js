@@ -2,6 +2,7 @@ import api from './api'
 
 export default function createCart() {
   return {
+    coupon: null,
     items: [],
     add(item) {
       const localItem = this.items.find((product) => product.id === item.id)

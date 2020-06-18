@@ -14,9 +14,12 @@ it('can add item', () => {
   cart.add(item)
 
   expect(cart.items).toHaveLength(1)
-  expect(cart.items[0].name).toBe(item.name)
-  expect(cart.items[0]).toHaveProperty('qty')
-  expect(cart.items[0].qty).toBe(1)
+  expect(cart.items).toContainEqual(
+    expect.objectContaining({
+      name: item.name,
+      qty: 1,
+    })
+  )
 })
 
 it('increases qty when adding an already added item', () => {
@@ -42,4 +45,9 @@ it('removes existing item', () => {
   cart.remove(item.id)
 
   expect(cart.items).toEqual([])
+})
+
+it('matches snapshot', () => {
+  const cart = createCart()
+  expect(cart).toMatchSnapshot()
 })

@@ -3,9 +3,13 @@ import Item from '../src/item'
 import createItem from '../src/factories/item-factory'
 import api from '../src/api'
 
+let cart
+beforeEach(() => {
+  cart = createCart()
+})
+
 it('can add item', () => {
   const item = new Item({ name: 'Game Boy' })
-  const cart = createCart()
 
   cart.add(item)
 
@@ -17,7 +21,6 @@ it('can add item', () => {
 
 it('increases qty when adding an already added item', () => {
   const item = new Item({ name: 'Game Boy' })
-  const cart = createCart()
 
   cart.add(item)
   cart.add(item)
@@ -27,8 +30,6 @@ it('increases qty when adding an already added item', () => {
 })
 
 it('throws if trying to remove when item does not exists', () => {
-  const cart = createCart()
-
   expect(() => cart.remove(123)).toThrowError(
     'Item 123 does not exist in the cart.'
   )
@@ -36,7 +37,6 @@ it('throws if trying to remove when item does not exists', () => {
 
 it('removes existing item', () => {
   const item = new Item({ name: 'Game Boy' })
-  const cart = createCart()
 
   cart.add(item)
   cart.remove(item.id)
